@@ -5,7 +5,12 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
 import com.github.kwhat.jnativehook.mouse.NativeMouseEvent;
 import com.github.kwhat.jnativehook.mouse.NativeMouseListener;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.concurrent.Callable;
+
 public class Listener implements NativeKeyListener, NativeMouseListener {
+    private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
     private final int altKeyCode = 56;
     private final int mKeyCode = 50;
     private boolean isActive;
@@ -13,6 +18,8 @@ public class Listener implements NativeKeyListener, NativeMouseListener {
     private int mousedownCount;
     private int mouseupCount;
     private Clicker clicker;
+
+    private Callable<Integer> onActivatedCallback;
 
     public Listener(int cps) {
         isActive = false;
@@ -28,10 +35,10 @@ public class Listener implements NativeKeyListener, NativeMouseListener {
         if(keyCode == altKeyCode) altPressed = true;
         else if(altPressed && keyCode == mKeyCode) {
             if(isActive) {
-                isActive = false;
+                setIsActive(false);
                 System.out.println("Deactivated!");
             } else {
-                isActive = true;
+                setIsActive(true);
                 System.out.println("Activated");
             }
         }
@@ -58,11 +65,25 @@ public class Listener implements NativeKeyListener, NativeMouseListener {
         }
     }
 
-    public void setIsActive(boolean value) {
-        isActive = value;
+    public void setIsActive(boolean isActive) {
+        boolean oldValue = this.isActive;
+        this.isActive = isActive;
+        propertyChangeSupport.firePropertyChange("isActive", oldValue, isActive);
     }
 
     public boolean getIsActive() {
-        return isActive;
+        return this.isActive;
+    }
+
+    public void setCps(int cps) {
+        this.clicker.setDelayMs(1000 / cps);
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
     }
 }

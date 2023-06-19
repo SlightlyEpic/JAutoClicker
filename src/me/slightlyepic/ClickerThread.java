@@ -21,6 +21,10 @@ public class ClickerThread extends Thread {
         return this.mutex;
     }
 
+    public void setDelayMs(int delayMs) {
+        this.delayMs = delayMs;
+    }
+
     @Override
     public void run() {
         while (!isInterrupted()) {

@@ -6,7 +6,6 @@ public class Clicker {
     public boolean isClicking;
     private int delayMs;
     private Robot robot;
-
     private ClickerThread runnerThread;
 
     public Clicker(int cps) {
@@ -37,5 +36,10 @@ public class Clicker {
 
     public boolean getIsClicking() {
         return isClicking;
+    }
+
+    public void setDelayMs(int delayMs) {
+        runnerThread.setDelayMs(delayMs);
+        this.delayMs = delayMs;
     }
 }
