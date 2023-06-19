@@ -1,12 +1,16 @@
 package me.slightlyepic;
 
+import com.formdev.flatlaf.FlatDarkLaf;
 import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.NativeHookException;
 
 import javax.swing.*;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Color;
+import java.text.NumberFormat;
 
 public class App {
     private Listener listener;
@@ -14,17 +18,21 @@ public class App {
 
     private JPanel panelMain;
     private JButton applyButton;
-    private JTextField cpsTextField;
     private JLabel cpsLabel;
     private JButton toggleButton;
     private JLabel messageLabel;
+    private JFormattedTextField cpsFormTextField;
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("App");
-        frame.setContentPane(new App().panelMain);
+        FlatDarkLaf.setup();
+
+        App app = new App();
+        JFrame frame = new JFrame("Epic Autoclicker");
+        frame.setContentPane(app.panelMain);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+        frame.setResizable(false);
     }
 
     public App() {
@@ -34,6 +42,21 @@ public class App {
             System.err.println("Failed to register native hook: " + ex.getMessage());
             System.exit(1);
         }
+
+        /*
+        NumberFormat format = NumberFormat.getInstance();
+        NumberFormatter formatter = new NumberFormatter(format);
+        DefaultFormatterFactory factory = new DefaultFormatterFactory(formatter);
+
+        formatter.setValueClass(Integer.class);
+        formatter.setMinimum(0);
+        formatter.setMaximum(99);
+        formatter.setAllowsInvalid(false);
+        formatter.setCommitsOnValidEdit(true);
+
+        cpsFormTextField.setFormatterFactory(factory);
+        cpsFormTextField.setText("20");
+         */
 
         currentInputCps = 20;
 
@@ -61,16 +84,21 @@ public class App {
         applyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int inputCps = Integer.parseInt(cpsTextField.getText());
-                if(inputCps <= 50) {
-                    int actualCps = inputCps + (int) (inputCps / 5);
-                    listener.setCps(actualCps);
-                    currentInputCps = inputCps;
-                    messageLabel.setForeground(new Color(26, 211, 82));
-                    messageLabel.setText("Set CPS to " + inputCps);
-                } else {
+                try {
+                    int inputCps = Integer.parseInt(cpsFormTextField.getText());
+                    if (inputCps <= 50) {
+                        int actualCps = inputCps + (int) (inputCps / 5);
+                        listener.setCps(actualCps);
+                        currentInputCps = inputCps;
+                        messageLabel.setForeground(new Color(26, 211, 82));
+                        messageLabel.setText("Set CPS to " + inputCps);
+                    } else {
+                        messageLabel.setForeground(new Color(229, 32, 32));
+                        messageLabel.setText("<html><body>CPS cannot be<br>greater than 50</body></html>");
+                    }
+                } catch(NumberFormatException ex) {
                     messageLabel.setForeground(new Color(229, 32, 32));
-                    messageLabel.setText("<html><body>CPS cannot be<br>greater than 50</body></html>");
+                    messageLabel.setText("Invalid CPS");
                 }
             }
         });
@@ -78,7 +106,7 @@ public class App {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(toggleButton.getText().equals("Enable")) {
-                    cpsTextField.setText(String.valueOf(currentInputCps));
+                    cpsFormTextField.setText(String.valueOf(currentInputCps));
                     messageLabel.setText("");
                     listener.setIsActive(true);
                 } else {

@@ -11,5 +11,6 @@
     <orderEntry type="jdk" jdkName="jbr-17" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="jnativehook-2.2.2" level="project" />
+    <orderEntry type="library" name="flatlaf-3.1.1" level="project" />
   </component>
 </module>
