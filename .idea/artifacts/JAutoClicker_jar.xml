@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="JAutoClicker:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/JAutoClicker_jar</output-path>
+    <root id="archive" name="JAutoClicker.jar">
+      <element id="module-output" name="JAutoClicker" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../JavaStuff/jnativehook/jnativehook-2.2.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../JavaStuff/FlatLAF/flatlaf-3.1.1.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
