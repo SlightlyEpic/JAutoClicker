@@ -9,6 +9,3 @@ It keeps clicking as long as youre holding LMB (only when its enabled though), a
 ---
 Heres an image coz why not  
 ![The ui](https://i.imgur.com/VJXdJ6w.png "The UI")
-
----
-No gitignore cuz I didnt plan on uploading this repo to github and I cba
